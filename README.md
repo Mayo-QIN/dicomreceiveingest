@@ -39,3 +39,10 @@ Option to execute command
 
     -xcs '/bin/bash ${HOME}/.dcm2mov/dcm2mov.sh
 
+
+
+
+## How to send data 
+
+
+storescu +sd +sp *.dcm -v +r  0.0.0.0 8832 /media/pan0s/STORE01/stage1/0a0c32c9e08cc2ea76a71649de56be6d/
