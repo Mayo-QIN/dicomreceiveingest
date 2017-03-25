@@ -17,14 +17,14 @@ A docker receive-ingest instance than can be deployed based om a docker file pro
 
 To deploy follow the steps be executing the commands:
 
-    docker build . ( This will take some time)
+    docker build . -t receive ( This will take some time)
 
 *docker images* (Will list all the images select the most recent one), *docker ps* will give information for the ones running or *docker ps -a* will show the ones stopped. 
 
-   docker run -d -p 10070:80 -p 10071:22 -p 8832:8832 -p 5000:5000  {imageID}}
+   docker run -d --name receive -p 10070:80 -p 10071:22 -p 8832:8832 -p 5000:5000  receive
 
 docker receive-ingest is up and running, you can visit localhost:8832 and start setting up the project details or ssh to your docker by ssh root@localhost -p 10081 or shell access.
-
+`
 ## Use of store scp 
 
     storescp -v --fork --accept-all --promiscuous --sort-conc-studies STD 8832   -od /tmp  -xcs '/bin/bash main.sh'

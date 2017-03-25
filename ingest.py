@@ -11,12 +11,7 @@ from dateutil.relativedelta import relativedelta
 
 import QIN as qin
 
-# Some help here
-# Injest a single series
-# ./ingestDICOM.py /qia/projects/ImageLinks/MRA-0201/MR_20070116/0004_TOF-3D_VBI_1.04MM-5-SLAB/
-# find /home/m112447/Sorted_UCSF/*  -type d -print0 | xargs -n 1 --max-procs 1 -0 ./UCSF.py --f --t UCSF.config
-# find /fastIOtmp/TCGA/TCGA-LGG/*  -type d -print0 | xargs -n 1 --max-procs 1 -0 ./UCSF.py --f --t UCSF.config
-# find /fastIOtmp/TCGA-GBM/TCGA-GBM -type d -print0 | xargs -n 1 --max-procs 1 -0 ./UCSF.py --f --t UCSF.config
+
 
 
 def makeFilename ( name ):
@@ -230,8 +225,8 @@ class ingest:
 		status = subprocess.call ( command, shell=True )
 		if status != 0:
 			# Try with dcmtonii
-			print "/home/m112447/Desktop/Python_projects/tipy/mricron/dcm2niix -o %s -z y  %s" % (niiDir, dicomDir)
-			status = subprocess.call ( "/home/m112447/Desktop/Python_projects/tipy/mricron/dcm2niix -o %s -z y  %s" % (niiDir, dicomDir), shell=True )
+			print "dcm2nii -o %s -z y  %s" % (niiDir, dicomDir)
+			status = subprocess.call ( "dcm2nii -o %s -z y  %s" % (niiDir, dicomDir), shell=True )
 			print 'Finished convert with status', status
 			## ! There is an issue here try to hack around it remplace niiDir  with dicomDir
 			niiFiles = glob.glob ( os.path.join ( dicomDir, "*.nii.gz" ) )
