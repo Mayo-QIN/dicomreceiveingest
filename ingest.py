@@ -182,6 +182,8 @@ class ingest:
 			# eg checkin = server.simple_checkin ( bucket.get('__search_key__'), 'publish', './bucket.py', mode='upload', create_icon=False, checkin_type='auto' )
 			if not self.series.getFilenameForContext ( self.context ):
 				self.series.checkinFile ( self.context, self.niiFile )
+			if not self.series.getFilenameForContext ( "zip" ):
+				self.series.checkinFile ( 'zip', self.zipFile )				
 			if not self.series.getFilenameForContext ( "tags" ):
 				self.series.checkinFile ( 'tags', self.tagFile )
 			if not self.series.getFilenameForContext ( "icon" ):
@@ -215,7 +217,9 @@ class ingest:
 
 		for filename in glob.glob(os.path.join(dirname, '*')):
 			shutil.copy(filename, dicomDir)
-
+		# For the demo i create an additional Zip file! 
+		shutil.make_archive('original', 'zip', niiDir)
+		self.zipFile=os.path.join ( niiDir, "original.zip" )
 		self.niiFile = os.path.join ( niiDir, "original.nii.gz" )
 		self.voiFile = os.path.join ( niiDir, "original.voi.nii.gz" )
 		convert = os.path.join ( self.stageDirectory, 'convert.lua' );
