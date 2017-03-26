@@ -113,14 +113,19 @@ class ingest:
 		variable_patientname="PatientName"
 
 
+		# obj = { 'name': self.tags[variable_patientname],
+		# 		'description': self.tags["PatientID"],
+		# 		'subjectname': self.tags[variable_patientname],
+		# 		'subjectid': self.tags["PatientID"],
+		# 		'subjectsex': self.tags['PatientSex'],
+		# 		'subjectbirthdate': self.tags["PatientBirthDate"],
+		# 		'safename' : makeFilename ( self.tags[variable_patientname] ) }
+		# For the demo the data did not have the required info so I modified the object. 
+
 		obj = { 'name': self.tags[variable_patientname],
 				'description': self.tags["PatientID"],
 				'subjectname': self.tags[variable_patientname],
-				'subjectid': self.tags["PatientID"],
-				'subjectsex': self.tags['PatientSex'],
-				'subjectbirthdate': self.tags["PatientBirthDate"],
 				'safename' : makeFilename ( self.tags[variable_patientname] ) }
-
 
 		data = self.matchTags ( "qin/subject", obj )
 		if data['subjectbirthdate'] and data['subjectbirthdate']=='Unknown':
