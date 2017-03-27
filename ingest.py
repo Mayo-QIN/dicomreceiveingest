@@ -238,7 +238,7 @@ class ingest:
 			status = subprocess.call ( "dcm2nii -o %s -z y  %s" % (niiDir, dicomDir), shell=True )
 			print 'Finished convert with status', status
 			## ! There is an issue here try to hack around it remplace niiDir  with dicomDir
-			niiFiles = glob.glob ( os.path.join ( dicomDir, "*.nii.gz" ) )
+			niiFiles = glob.glob ( os.path.join ( niiDir, "*.nii.gz" ) )
 			self.niiFile = os.path.join ( niiDir, "original.nii.gz" )
 			os.rename ( niiFiles[0], self.niiFile )
 			subprocess.call ( "/bin/touch %s" % self.voiFile, shell=True )
