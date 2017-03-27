@@ -120,7 +120,7 @@ class ingest:
 		# 		'subjectsex': self.tags['PatientSex'],
 		# 		'subjectbirthdate': self.tags["PatientBirthDate"],
 		# 		'safename' : makeFilename ( self.tags[variable_patientname] ) }
-		# For the demo the data did not have the required info so I modified the object. 
+		# For the demo the data did not have the required info so I modified the object.
 
 		obj = { 'name': self.tags[variable_patientname],
 				'description': self.tags["PatientID"],
@@ -183,7 +183,7 @@ class ingest:
 			if not self.series.getFilenameForContext ( self.context ):
 				self.series.checkinFile ( self.context, self.niiFile )
 			if not self.series.getFilenameForContext ( "zip" ):
-				self.series.checkinFile ( 'zip', self.zipFile )				
+				self.series.checkinFile ( 'zip', self.zipFile )
 			if not self.series.getFilenameForContext ( "tags" ):
 				self.series.checkinFile ( 'tags', self.tagFile )
 			if not self.series.getFilenameForContext ( "icon" ):
@@ -217,8 +217,8 @@ class ingest:
 
 		for filename in glob.glob(os.path.join(dirname, '*')):
 			shutil.copy(filename, dicomDir)
-		# For the demo i create an additional Zip file! 
-		shutil.make_archive('original', 'zip', niiDir)
+		# For the demo i create an additional Zip file!
+		shutil.make_archive('original', 'zip', dicomDir)
 		self.zipFile=os.path.join ( niiDir, "original.zip" )
 		self.niiFile = os.path.join ( niiDir, "original.nii.gz" )
 		self.voiFile = os.path.join ( niiDir, "original.voi.nii.gz" )
