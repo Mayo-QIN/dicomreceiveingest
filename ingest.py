@@ -217,44 +217,65 @@ class ingest:
 
 		for filename in glob.glob(os.path.join(dirname, '*')):
 			shutil.copy(filename, dicomDir)
-		# For the demo i create an additional Zip file!
+		# For the demo i create an additional Zip file
+		zipDir = os.path.join ( self.stageDirectory, "original" )
+		print "-------------------------------"
+		print "-------------------------------"
+		print "-------------------------------"
+		print "-------------------------------"
+		print "-------------------------------"
+		print "-------------------------------"
+		print "-------------------------------"
+		print "-------------------------------"
+		print "-------------------------------"
+		print "-------------------------------"
+		print "-------------------------------"
+		print "-------------------------------"
+		print "-------------------------------"
+		print "The folder:"
+		print zipDir
+		print dicomDir
 		shutil.make_archive('original', 'zip', dicomDir)
 		self.zipFile=os.path.join ( niiDir, "original.zip" )
+		shutil.move("original.zip",self.zipFile)
+
 		self.niiFile = os.path.join ( niiDir, "original.nii.gz" )
 		self.voiFile = os.path.join ( niiDir, "original.voi.nii.gz" )
-		convert = os.path.join ( self.stageDirectory, 'convert.lua' );
-		fid = open ( convert, 'w' )
+		print "-------------------------------"
+		print "-------------------------------"
+		print "-------------------------------"
+		print "-------------------------------"
+		print "-------------------------------"
+		print "-------------------------------"
+		print "-------------------------------"
+		print "-------------------------------"
+		print "-------------------------------"
+		print "-------------------------------"
+		print "-------------------------------"
 
-		fid.write ( "i = LoadImage ( '%s' ); SaveImage(i,'%s');\n" % (dicomDir, self.niiFile) )
-		# Save a VOI
-		fid.write ( "voi = MI3C.Image ( i ); voi:setAllVoxels(0.0); SaveImage(i,'%s');\n" % (self.voiFile,) )
-
-		fid.close()
-		command = "/sge/software/iMI3C %s" % convert
-		status = subprocess.call ( command, shell=True )
-		if status != 0:
-			# Try with dcmtonii
-			print "dcm2nii -o %s -z y  %s" % (niiDir, dicomDir)
-			status = subprocess.call ( "dcm2nii -o %s -z y  %s" % (niiDir, dicomDir), shell=True )
-			print 'Finished convert with status', status
-			## ! There is an issue here try to hack around it remplace niiDir  with dicomDir
-			niiFiles = glob.glob ( os.path.join ( niiDir, "*.nii.gz" ) )
-			self.niiFile = os.path.join ( niiDir, "original.nii.gz" )
-			os.rename ( niiFiles[0], self.niiFile )
-			subprocess.call ( "/bin/touch %s" % self.voiFile, shell=True )
-			# Add this to account for dealing with DTI files
-			try:
-				bvec=glob.glob ( os.path.join ( niiDir, "*.bvec" ) )
-				bval=glob.glob ( os.path.join ( niiDir, "*.bval" ) )
-				print bvec[0],bval[0]
-				self.bvec = os.path.join ( niiDir, "original.bvec" )
-				os.rename ( bvec[0], self.bvec )
-				self.bval = os.path.join ( niiDir, "original.bval" )
-				os.rename ( bval[0], self.bval )
-				print "Success=========================="
-				print bvec[0],bval[0]
-			except:
-				pass
+		# Try with dcmtonii
+		print "dcm2nii -o %s -z y  %s" % (niiDir, dicomDir)
+		status = subprocess.call ( "dcm2nii -o %s -z y  %s" % (niiDir, dicomDir), shell=True )
+		print 'Finished convert with status', status
+		## ! There is an issue here try to hack around it remplace niiDir  with dicomDir
+		print niiDir
+		niiFiles = glob.glob ( os.path.join ( niiDir, "*.nii.gz" ) )
+		self.niiFile = os.path.join ( niiDir, "original.nii.gz" )
+		os.rename ( niiFiles[0], self.niiFile )
+		subprocess.call ( "/bin/touch %s" % self.voiFile, shell=True )
+		# Add this to account for dealing with DTI files
+		try:
+			bvec=glob.glob ( os.path.join ( niiDir, "*.bvec" ) )
+			bval=glob.glob ( os.path.join ( niiDir, "*.bval" ) )
+			print bvec[0],bval[0]
+			self.bvec = os.path.join ( niiDir, "original.bvec" )
+			os.rename ( bvec[0], self.bvec )
+			self.bval = os.path.join ( niiDir, "original.bval" )
+			os.rename ( bval[0], self.bval )
+			print "Success=========================="
+			print bvec[0],bval[0]
+		except:
+			pass
 		# Make an preview
 		self.previewFile = os.path.join ( self.stageDirectory, "icon.png" )
 		self.pngFile = os.path.join ( self.stageDirectory, "icon.png" )
