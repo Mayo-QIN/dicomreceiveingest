@@ -102,9 +102,9 @@ class ingest:
 			print self.config.sections()
 			if "TACTIC" in self.config.sections():
 				self.server = TacticServerStub(server=config.get("TACTIC", "server"), project=config.get("TACTIC", "project"), user=config.get("TACTIC", "user"), password=config.get("TACTIC", "password"))
-				print (2*'---------------')
-				print ('Just bought a ticket!')
-				print (dir(self.server))
+			print (2*'---------------')
+			print ('Just bought a ticket!')
+			print (dir(self.server))
 		else:
 			self.server = TacticServerStub()
 		# Insert Subject
@@ -180,14 +180,20 @@ class ingest:
 
 			# Upload the files using snapshots so TACTIC des the right thing in making versions
 			# eg checkin = server.simple_checkin ( bucket.get('__search_key__'), 'publish', './bucket.py', mode='upload', create_icon=False, checkin_type='auto' )
-			if not self.series.getFilenameForContext ( self.context ):
-				self.series.checkinFile ( self.context, self.niiFile )
+			try:
+				if not self.series.getFilenameForContext ( self.context ):
+					self.series.checkinFile ( self.context, self.niiFile )
+			except:
+				pass
 			if not self.series.getFilenameForContext ( "zip" ):
 				self.series.checkinFile ( 'zip', self.zipFile )
-			if not self.series.getFilenameForContext ( "tags" ):
-				self.series.checkinFile ( 'tags', self.tagFile )
-			if not self.series.getFilenameForContext ( "icon" ):
-				self.series.checkinFile ( 'icon', self.pngFile )
+			try:
+				if not self.series.getFilenameForContext ( "tags" ):
+					self.series.checkinFile ( 'tags', self.tagFile )
+			except:
+				pass
+			# if not self.series.getFilenameForContext ( "icon" ):
+			# 	self.series.checkinFile ( 'icon', self.pngFile )
 			try:
 				if not self.series.getFilenameForContext ( "bvec" ):
 					self.series.checkinFile ( 'bvec', self.bvec )
@@ -257,31 +263,34 @@ class ingest:
 		print "dcm2nii -o %s -z y  %s" % (niiDir, dicomDir)
 		status = subprocess.call ( "dcm2nii -o %s -z y  %s" % (niiDir, dicomDir), shell=True )
 		print 'Finished convert with status', status
-		## ! There is an issue here try to hack around it remplace niiDir  with dicomDir
-		print niiDir
-		niiFiles = glob.glob ( os.path.join ( niiDir, "*.nii.gz" ) )
-		self.niiFile = os.path.join ( niiDir, "original.nii.gz" )
-		os.rename ( niiFiles[0], self.niiFile )
-		subprocess.call ( "/bin/touch %s" % self.voiFile, shell=True )
-		# Add this to account for dealing with DTI files
-		try:
-			bvec=glob.glob ( os.path.join ( niiDir, "*.bvec" ) )
-			bval=glob.glob ( os.path.join ( niiDir, "*.bval" ) )
-			print bvec[0],bval[0]
-			self.bvec = os.path.join ( niiDir, "original.bvec" )
-			os.rename ( bvec[0], self.bvec )
-			self.bval = os.path.join ( niiDir, "original.bval" )
-			os.rename ( bval[0], self.bval )
-			print "Success=========================="
-			print bvec[0],bval[0]
-		except:
-			pass
+		if status==0:
+			# It means that fails so need to use diffrent converter for the dco
+			## ! There is an issue here try to hack around it remplace niiDir  with dicomDir
+			print niiDir
+			niiFiles = glob.glob ( os.path.join ( niiDir, "*.nii.gz" ) )
+			self.niiFile = os.path.join ( niiDir, "original.nii.gz" )
+			os.rename ( niiFiles[0], self.niiFile )
+			subprocess.call ( "/bin/touch %s" % self.voiFile, shell=True )
+			# Add this to account for dealing with DTI files
+			try:
+				bvec=glob.glob ( os.path.join ( niiDir, "*.bvec" ) )
+				bval=glob.glob ( os.path.join ( niiDir, "*.bval" ) )
+				print bvec[0],bval[0]
+				self.bvec = os.path.join ( niiDir, "original.bvec" )
+				os.rename ( bvec[0], self.bvec )
+				self.bval = os.path.join ( niiDir, "original.bval" )
+				os.rename ( bval[0], self.bval )
+				print "Success=========================="
+				print bvec[0],bval[0]
+			except:
+				pass
 		# Make an preview
-		self.previewFile = os.path.join ( self.stageDirectory, "icon.png" )
-		self.pngFile = os.path.join ( self.stageDirectory, "icon.png" )
-		status = subprocess.call (["dcmj2pnm", "--histogram-window", "1", "--write-png", self.DICOMFile, self.pngFile])
+		# self.previewFile = os.path.join ( self.stageDirectory, "icon.png" )
+		# self.pngFile = os.path.join ( self.stageDirectory, "icon.png" )
+		# status = subprocess.call (["dcmj2pnm", "--histogram-window", "1", "--write-png", self.DICOMFile, self.pngFile])
 		# proc = subprocess.Popen(["dcmj2pnm", "--histogram-window", "1", "--write-png", self.DICOMFile, self.pngFile])
 		# print "the commandline is %s" % cmd
+
 	def matchTags ( self, searchType, defaults={} ):
 		validColumns = self.server.get_column_names ( searchType )
 		for key in validColumns:
