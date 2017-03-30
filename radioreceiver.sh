@@ -10,4 +10,5 @@ echo STARTING RECEIVER
 # After talking to bill 2
 
 
-storescp -v -aet receive --sort-conc-studies STUDY -pm +xa -od /DICOM/  8833 -xcs './main.sh' -tos 100
+# storescp -v -aet receive --sort-conc-studies STUDY -pm +xa -od /DICOM/  8832 -xcs './main.sh' -tos 100
+storescp -v -aet receive --sort-conc-studies STUDY -pm +xa -od-od /DICOM/ -xcs './main.sh' -tos 100 8832
