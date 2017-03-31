@@ -104,7 +104,7 @@ class ingest:
 				self.server = TacticServerStub(server=config.get("TACTIC", "server"), project=config.get("TACTIC", "project"), user=config.get("TACTIC", "user"), password=config.get("TACTIC", "password"))
 			print (2*'---------------')
 			print ('Just bought a ticket!')
-			print (dir(self.server))
+			# print (dir(self.server))
 		else:
 			self.server = TacticServerStub()
 		# Insert Subject
